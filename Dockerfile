@@ -1,25 +1,19 @@
-FROM python:3.12-slim-trixie AS builder
+FROM python:3.13-slim
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
+
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen --compile-bytecode --no-cache
+RUN uv sync --frozen --no-install-project --no-dev
+
+ENV PATH="/app/.venv/bin:$PATH"
 
 COPY . .
 
-FROM python:3.12-slim-trixie
+EXPOSE 8501
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
-RUN useradd --create-home --shell /bin/bash appuser
-USER appuser
-WORKDIR /home/appuser/app
-
-COPY --from=builder /app/ ./
-
-ENV PATH="/home/appuser/app/.venv/bin:$PATH"
-ENV PYTHONUNBUFFERED=1
-
-CMD ["uv", "run", "streamlit", "run", "src/main.py",  "--server.port=8501", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "src/main.py", "--server.port=8501", "--server.address=0.0.0.0"]
