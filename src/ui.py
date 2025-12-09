@@ -30,7 +30,7 @@ def plot_pie_chart(data: list, label_col: str, value_col: str, title: str):
 
   df = pd.DataFrame(data)
   fig = px.pie(df, names=label_col, values=value_col, title=title, hole=0.4)
-  st.plotly_chart(fig, use_container_width=True)
+  st.plotly_chart(fig, width='stretch')
 
 
 def plot_bar_chart(data: list, x_col: str, y_col: str, title: str):
@@ -40,7 +40,7 @@ def plot_bar_chart(data: list, x_col: str, y_col: str, title: str):
 
   df = pd.DataFrame(data)
   fig = px.bar(df, x=x_col, y=y_col, title=title)
-  st.plotly_chart(fig, use_container_width=True)
+  st.plotly_chart(fig, width='stretch')
 
 
 def render_kpi(label: str, value: int):

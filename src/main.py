@@ -23,7 +23,7 @@ def main():
   with col1:
     if st.sidebar.button(
       "📊 Аналитика" if st.session_state["nav_section"] == "Аналитика" else "Аналитика",
-      use_container_width=True
+      width='stretch'
       ):
       st.session_state["nav_section"] = "Аналитика"
       st.rerun()
@@ -31,7 +31,7 @@ def main():
   with col2:
     if st.sidebar.button(
       "📁 Загрузка" if st.session_state["nav_section"] == "Загрузка данных" else "Загрузка данных",
-      use_container_width=True
+      width='stretch'
       ):
       st.session_state["nav_section"] = "Загрузка данных"
       st.rerun()

@@ -4,6 +4,7 @@ from datetime import datetime
 import uuid
 
 from api import ApiClient
+from ui import plot_pie_chart
 from schemas import (
   CATEGORY_LEVEL_1_TRANSLATIONS,
   CATEGORY_LEVEL_2_TRANSLATIONS,
@@ -33,6 +34,18 @@ def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime):
     st.rerun()
 
   st.title(f"Сообщения: {label_l1_ru} > {label_l2_ru}")
+
+  with st.spinner("Загрузка данных..."):
+    sentiments = api.get_sentiments(start_dt, end_dt, level1=category_l1, level2=category_l2)
+    emotions = api.get_emotions(start_dt, end_dt, level1=category_l1, level2=category_l2)
+
+  col1, col2 = st.columns(2)
+  with col1:
+    sentiments_data = [s.model_dump() for s in sentiments]
+    plot_pie_chart(sentiments_data, "sentiment_label_ru", "count", "Сентименты")
+  with col2:
+    emotions_data = [e.model_dump() for e in emotions]
+    plot_pie_chart(emotions_data, "emotion_label_ru", "count", "Эмоции")
 
   # Filters
   col1, col2, col3 = st.columns(3)
