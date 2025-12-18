@@ -77,7 +77,7 @@ def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime):
 
     cols_to_show = [
       "event_date", "text", "sentiment_label_ru", "emotion_label_ru",
-      "source", "user_id", "external_id", "lang_code", "lang_score", "emotion_score",
+      "source", "user_id", "external_id", "lang_code", "lang_score", "emotion_score", "sentiment_score"
     ]
     cols_to_show = [c for c in cols_to_show if c in df_msgs.columns]
 
@@ -97,6 +97,7 @@ def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime):
           "lang_code": "Язык",
           "lang_score": st.column_config.NumberColumn("Lang Score", format="%.2f"),
           "emotion_score": st.column_config.NumberColumn("Emotion Score", format="%.2f"),
+          "sentiment_score": st.column_config.NumberColumn("Sentiment Score", format="%.2f")
         },
       )
   else:
