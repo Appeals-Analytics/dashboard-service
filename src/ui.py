@@ -43,6 +43,8 @@ def render_sidebar() -> Tuple[datetime, datetime, str]:
   st.sidebar.divider()
   st.sidebar.checkbox("Режим отладки", key="debug_mode")
 
+  render_pdf_button()
+
   return start_dt, end_dt, granularity
 
 
@@ -130,3 +132,24 @@ def plot_emotion_dynamics_chart(data: List[Any], title: str = "Динамика 
 
 def render_kpi(label: str, value: int):
   st.metric(label=label, value=f"{value:,}")
+
+
+def inject_pdf_styles():
+  st.markdown(
+    """
+    <style>
+      @media print {
+        [data-testid="stSidebar"] { display: none; }
+        header, footer { display: none; }
+        .main .block-container { max-width: 100%; padding: 0; }
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+  )
+
+
+def render_pdf_button():
+  inject_pdf_styles()
+  if st.sidebar.button("Скачать PDF"):
+    st.markdown('<script>window.print();</script>', unsafe_allow_html=True)
