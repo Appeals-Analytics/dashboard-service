@@ -11,10 +11,35 @@ from schemas import (
   SentimentCountedItem,
   CategoryCountedItem,
   OrderEnum,
+  EmotionDynamicsFilterParams,
+  EmotionDynamicsResponse,
+  GranularityEnum,
 )
 
 
 class DashboardApi(BaseApiClient):
+
+  def get_emotion_dynamics(
+    self,
+    start_time: datetime,
+    end_time: datetime,
+    granularity: GranularityEnum = GranularityEnum.DAY,
+    level1: Optional[str] = None,
+    level2: Optional[str] = None,
+  ) -> EmotionDynamicsResponse:
+    query = EmotionDynamicsFilterParams(
+      start_time=start_time,
+      end_time=end_time,
+      granularity=granularity,
+      level1_category=CategoryLevel1Enum(level1) if level1 else None,
+      level2_category=CategoryLevel2Enum(level2) if level2 else None,
+    )
+    params = query.model_dump(mode="json", exclude_none=True)
+    # Note: The backend implementation is expected to return the structure matching EmotionDynamicsResponse
+    # If the backend is not yet implemented, this call will fail or return 404.
+    # Since I am only implementing the dashboard side, I assume the endpoint exists or will exist.
+    data = self._get("/dashboard/emotions/dynamics", params)
+    return EmotionDynamicsResponse(**data)
 
   def get_emotions(
     self,

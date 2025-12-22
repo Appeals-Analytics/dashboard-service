@@ -6,6 +6,7 @@ from schemas.sentiment_enum import SentimentEnum
 from schemas.category_level_1_enum import CategoryLevel1Enum
 from schemas.category_level_2_enum import CategoryLevel2Enum
 from schemas.order_enum import OrderEnum
+from schemas.granularity_enum import GranularityEnum
 
 
 class BaseFilterParams(BaseModel):
@@ -16,6 +17,11 @@ class BaseFilterParams(BaseModel):
 class DashboardFilterParams(BaseFilterParams):
   level1_category: Optional[CategoryLevel1Enum] = None
   level2_category: Optional[CategoryLevel2Enum] = None
+
+
+class EmotionDynamicsFilterParams(DashboardFilterParams):
+  granularity: GranularityEnum = GranularityEnum.DAY
+
 
 
 class CategoryFilterParams(BaseFilterParams):

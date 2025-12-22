@@ -3,11 +3,11 @@ import pandas as pd
 from datetime import datetime
 
 from api import ApiClient
-from ui import plot_pie_chart
+from ui import plot_pie_chart, plot_emotion_dynamics_chart
 from schemas import CATEGORY_LEVEL_1_TRANSLATIONS, CategoryLevel1Enum
 
 
-def render_category_detail(api: ApiClient, start_dt: datetime, end_dt: datetime):
+def render_category_detail(api: ApiClient, start_dt: datetime, end_dt: datetime, granularity: str):
   category_l1 = st.session_state.get("selected_l1")
   if not category_l1:
     st.session_state["page"] = "overview"
@@ -30,6 +30,10 @@ def render_category_detail(api: ApiClient, start_dt: datetime, end_dt: datetime)
     sentiments = api.get_sentiments(start_dt, end_dt, level1=category_l1)
     emotions = api.get_emotions(start_dt, end_dt, level1=category_l1)
     subcategories = api.get_categories_l2(start_dt, end_dt, level1=category_l1)
+    dynamics = api.get_emotion_dynamics(start_dt, end_dt, granularity=granularity, level1=category_l1)
+
+  st.subheader("Динамика эмоционального фона")
+  plot_emotion_dynamics_chart(dynamics.data)
 
   col1, col2 = st.columns(2)
   with col1:

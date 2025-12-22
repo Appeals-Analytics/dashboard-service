@@ -4,10 +4,10 @@ from datetime import datetime
 import uuid
 
 from api import ApiClient
-from ui import plot_pie_chart, plot_bar_chart, render_kpi
+from ui import plot_pie_chart, plot_bar_chart, render_kpi, plot_emotion_dynamics_chart
 
 
-def render_overview(api: ApiClient, start_dt: datetime, end_dt: datetime):
+def render_overview(api: ApiClient, start_dt: datetime, end_dt: datetime, granularity: str):
   st.html(f"<script>window.scrollTo(0,0);</script><div style='display:none'>{uuid.uuid4()}</div>")
   st.title("Общая аналитика")
 
@@ -15,9 +15,13 @@ def render_overview(api: ApiClient, start_dt: datetime, end_dt: datetime):
     sentiments = api.get_sentiments(start_dt, end_dt)
     emotions = api.get_emotions(start_dt, end_dt)
     categories = api.get_categories_l1(start_dt, end_dt)
+    dynamics = api.get_emotion_dynamics(start_dt, end_dt, granularity=granularity)
 
   total_requests = sum(c.count for c in categories)
   render_kpi("Всего запросов", total_requests)
+
+  st.subheader("Динамика эмоционального фона")
+  plot_emotion_dynamics_chart(dynamics.data)
 
   col1, col2 = st.columns(2)
   with col1:

@@ -26,6 +26,25 @@ class CategoryCountedItem(BaseModel):
   emotions_ru: Dict[str, int]
 
 
+class EmotionDynamicsBreakdownItem(BaseModel):
+  count: int
+  percentage: float
+  label_ru: str
+
+
+class EmotionDynamicsItem(BaseModel):
+  period_start: datetime
+  total_count: int
+  average_sentiment_score: Optional[float] = None
+  average_emotion_confidence: Optional[float] = None
+  breakdown: Dict[str, EmotionDynamicsBreakdownItem]
+
+
+class EmotionDynamicsResponse(BaseModel):
+  meta: Dict[str, Any]
+  data: List[EmotionDynamicsItem]
+
+
 class MessageResponse(BaseModel):
   id: str
   external_id: Optional[str] = None

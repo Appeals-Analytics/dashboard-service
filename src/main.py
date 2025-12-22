@@ -39,16 +39,16 @@ def main():
   nav_selection = st.session_state["nav_section"]
 
   if nav_selection == "Аналитика":
-    start_dt, end_dt = render_sidebar()
+    start_dt, end_dt, granularity = render_sidebar()
 
     page = st.session_state["page"]
 
     if page == "overview":
-      render_overview(api, start_dt, end_dt)
+      render_overview(api, start_dt, end_dt, granularity)
     elif page == "category_detail":
-      render_category_detail(api, start_dt, end_dt)
+      render_category_detail(api, start_dt, end_dt, granularity)
     elif page == "messages":
-      render_messages(api, start_dt, end_dt)
+      render_messages(api, start_dt, end_dt, granularity)
     else:
       render_overview(api, start_dt, end_dt)
 

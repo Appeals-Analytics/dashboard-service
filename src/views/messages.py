@@ -4,7 +4,7 @@ from datetime import datetime
 import uuid
 
 from api import ApiClient
-from ui import plot_pie_chart
+from ui import plot_pie_chart, plot_emotion_dynamics_chart
 from schemas import (
   CATEGORY_LEVEL_1_TRANSLATIONS,
   CATEGORY_LEVEL_2_TRANSLATIONS,
@@ -14,7 +14,7 @@ from schemas import (
   EMOTION_TRANSLATIONS
 )
 
-def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime):
+def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime, granularity: str):
   st.html(f"<script>window.scrollTo(0,0);</script><div style='display:none'>{uuid.uuid4()}</div>")
 
   category_l1 = st.session_state.get("selected_l1")
@@ -38,6 +38,10 @@ def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime):
   with st.spinner("Загрузка данных..."):
     sentiments = api.get_sentiments(start_dt, end_dt, level1=category_l1, level2=category_l2)
     emotions = api.get_emotions(start_dt, end_dt, level1=category_l1, level2=category_l2)
+    dynamics = api.get_emotion_dynamics(start_dt, end_dt, granularity=granularity, level1=category_l1, level2=category_l2)
+
+  st.subheader("Динамика эмоционального фона")
+  plot_emotion_dynamics_chart(dynamics.data)
 
   col1, col2 = st.columns(2)
   with col1:
@@ -82,9 +86,13 @@ def render_messages(api: ApiClient, start_dt: datetime, end_dt: datetime):
     cols_to_show = [c for c in cols_to_show if c in df_msgs.columns]
 
     with st.container():
+
+      table_height = 21 * 35
+
       st.dataframe(
         df_msgs[cols_to_show],
         width="stretch",
+        height=table_height,
         hide_index=True,
         column_config={
           "event_date": st.column_config.DatetimeColumn("Дата", format="D MMM YYYY, HH:mm"),
