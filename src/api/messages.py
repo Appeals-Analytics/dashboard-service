@@ -36,7 +36,7 @@ class MessagesApi(BaseApiClient):
     )
 
     if level2 and isinstance(level2, str):
-      query.category_level_2 = [CategoryLevel2Enum(level2)]
+      query.category_level_2 = CategoryLevel2Enum(level2)
 
     params = query.model_dump(mode="json", exclude_none=True)
     data = self._get("/messages/", params)
