@@ -4,7 +4,7 @@ from api import ApiClient
 from ui import render_sidebar
 from views import render_overview, render_category_detail, render_messages, render_upload
 
-st.set_page_config(page_title=settings.app_title, layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title=settings.app_title, layout="wide", initial_sidebar_state="auto")
 
 
 def main():
